@@ -26,6 +26,14 @@ public class WarManager{
 		}
 		return hold;
 	}
+	public static void makeKey(Player player) throws TownyException{
+		Resident resident = (Resident)player;
+		Town town = resident.getTown();
+		Nation nation = town.getNation();
+		ItemStack key = new ItemStack(Material.GOLD_NUGGET);
+		RaidKey newKey = new RaidKey(key,nation);
+		player.getInventory().addItem(key);
+	}
 	public static boolean confirmInNation(Player player){
 		try {
 			if(TownyUniverse.getPlayer((Resident) player) != null){

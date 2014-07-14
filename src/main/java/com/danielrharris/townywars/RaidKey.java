@@ -19,7 +19,7 @@ public class RaidKey {
 	Location enemyTown;
 	private int teleportCooldown;
 	private ItemStack stack;
-	public RaidKey(ItemStack stack,Nation nation){
+	public RaidKey(ItemStack stack, Nation nation){
 		Random rand = new Random();
 		this.nation = nation.toString();
 		this.timeLeft = 1800;
@@ -34,6 +34,8 @@ public class RaidKey {
 		lore.set(3, this.itemsLeft + "");
 		this.validation = rand.nextInt(100000000);
 		lore.set(4, validation + "");
+		meta.setLore(lore);
+		stack.setItemMeta(meta);
 		WarManager.keys.add(this);
 	}
 	public void tick(){
