@@ -3,6 +3,6 @@
 	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="lib" path="jar/Towny-0.84.0.9.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="C:/Users/crehop/Desktop/Minecraft Test Server/craftbukkit.jar"/>
+	<classpathentry kind="lib" path="G:/Minecraft Stuff/PROGRAMING SERVER/craftbukkit.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

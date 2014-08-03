@@ -1,12 +1,17 @@
 package com.danielrharris.townywars;
-
 import com.palmergames.bukkit.towny.Towny;
 import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
+import com.palmergames.bukkit.towny.exceptions.TownyException;
 import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.object.TownyUniverse;
+
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -41,7 +46,7 @@ public class TownyWars
       Logger.getLogger(TownyWars.class.getName()).log(Level.SEVERE, null, ex);
     }
     PluginManager pm = getServer().getPluginManager();
-    pm.registerEvents(new WarListener(this), this);
+    pm.registerEvents(new WarListener(), this);
     tUniverse = ((Towny)Bukkit.getPluginManager().getPlugin("Towny")).getTownyUniverse();
     
     getConfig().addDefault("pper-player", Double.valueOf(2.0D));
@@ -57,8 +62,31 @@ public class TownyWars
     declareCost = getConfig().getDouble("declare-cost");
     endCost = getConfig().getDouble("end-cost");
     pKill = getConfig().getDouble("death-cost");
+	this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable()
+	{
+	    @Override  
+	    public void run()
+	    {
+	    	Iterator<RaidKey> keyChain = WarManager.keys.iterator();
+		    while(keyChain.hasNext())
+	    	{
+		    	RaidKey key = keyChain.next();
+		    	key.tick();
+			}
+		}
+	}, 0L, 10L);
   }
-  public static void tick(){
-	  
+
+  public boolean onCommand(CommandSender sender,Command cmd,String commandLabel, String[] args){
+	  Player player = (Player) sender;
+	  if(commandLabel.equals("twar")){
+		  Bukkit.broadcastMessage("CONFIRM COMMAND");
+		  try {
+			WarManager.makeKey(player);
+		} catch (TownyException e) {
+			Bukkit.broadcastMessage("FAILED");
+		}
+	  }
+	  return false;
   }
 }

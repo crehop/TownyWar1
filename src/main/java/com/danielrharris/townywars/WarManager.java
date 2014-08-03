@@ -1,6 +1,8 @@
 package com.danielrharris.townywars;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -15,7 +17,7 @@ import com.palmergames.bukkit.towny.object.TownyUniverse;
 
 
 public class WarManager{
-	public static List<RaidKey> keys;
+	public static List<RaidKey> keys = new ArrayList<RaidKey>();
 	public static RaidKey getKey(ItemStack stack){
 		RaidKey hold = null;
 		int validate = Integer.parseInt(stack.getItemMeta().getLore().get(4));
@@ -27,12 +29,24 @@ public class WarManager{
 		return hold;
 	}
 	public static void makeKey(Player player) throws TownyException{
-		Resident resident = (Resident)player;
-		Town town = resident.getTown();
-		Nation nation = town.getNation();
-		ItemStack key = new ItemStack(Material.GOLD_NUGGET);
-		RaidKey newKey = new RaidKey(key,nation);
-		player.getInventory().addItem(key);
+		Resident resident = null;
+		int count = 0;
+		for(Resident res:TownyWars.tUniverse.getActiveResidents()){
+			if(res.getName().equalsIgnoreCase(player.getName())){
+				break;
+			}
+			else{
+				count++;
+			}
+		}
+		resident = TownyWars.tUniverse.getActiveResidents().get(count);
+		if(resident != null){
+			Town town = resident.getTown();
+			Nation nation = town.getNation();
+			ItemStack key = new ItemStack(Material.GOLD_NUGGET);
+			RaidKey newKey = new RaidKey(key,nation,player);
+			player.getInventory().addItem(key);
+		}
 	}
 	public static boolean confirmInNation(Player player){
 		try {
@@ -75,6 +89,5 @@ public class WarManager{
 		return new ItemStack(Material.AIR);
 	}
 	public static void giveKey(Player player){
-		
 	}
 }

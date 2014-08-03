@@ -28,19 +28,22 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryInteractEvent;
+import org.bukkit.event.inventory.InventoryMoveItemEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.Inventory;
 
 public class WarListener implements Listener
 {
 
   private static Town townadd;
-  WarListener(TownyWars aThis) {}
+  WarListener() {}
   public static HashMap open;
-  
   @EventHandler
   public void onInteractEvent(PlayerInteractEvent event)
   {
@@ -58,12 +61,20 @@ public class WarListener implements Listener
 		  }
 	  }
   }
+  @EventHandler
+  public void inventoryDropEvent(PlayerDropItemEvent event){
+	  if(event.getItemDrop().getItemStack().hasItemMeta()){
+		  if(event.getItemDrop().getItemStack().getItemMeta().getDisplayName().contains("RAID KEY!")){
+			  event.setCancelled(true);
+		  }
+	  }
+  }
   
   @EventHandler
-  public void inventoryInteract(InventoryInteractEvent event){
-	  if(open.containsKey(event.getInventory())){
-		  if(event.getWhoClicked().getName().equals(open.get(event.getInventory().toString()))){
-			  Bukkit.broadcastMessage("SUCESS INVENTORY FOUND ON HASHTABLE WITH PLAYER " + open.get(event.getInventory()));
+  public void inventoryMoveEvent(InventoryClickEvent event){
+	  if(event.getInventory().getItem(event.getSlot()).hasItemMeta()){
+		  if(event.getInventory().getItem(event.getSlot()).getItemMeta().getDisplayName().contains("RAID KEY!")){
+			  event.setCancelled(true);
 		  }
 	  }
   }
@@ -97,14 +108,5 @@ public class WarListener implements Listener
   @EventHandler
   public void onNationRemove(NationRemoveTownEvent event)
   {
-  }
-  
-  @EventHandler
-  public boolean onCommand(CommandSender sender,Command cmd,String commandLabel, String[] args){
-	  Player player = (Player) sender;
-	  if(commandLabel.equals("twar")){
-		  WarManager.giveKey(player);
-	  }
-	  return false;
   }
 }
